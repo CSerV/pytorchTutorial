@@ -43,7 +43,7 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
                                           shuffle=False)
 
 examples = iter(test_loader)
-example_data, example_targets = examples.next()
+example_data, example_targets = next(examples)
 
 for i in range(6):
     plt.subplot(2,3,i+1)
@@ -80,7 +80,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)  
 
 ############## TENSORBOARD ########################
-writer.add_graph(model, example_data.reshape(-1, 28*28))
+writer.add_graph(model, example_data.reshape(-1, 28*28).to(device))
 #writer.close()
 #sys.exit()
 ###################################################
@@ -138,7 +138,7 @@ with torch.no_grad():
         class_probs_batch = [F.softmax(output, dim=0) for output in outputs]
 
         class_preds.append(class_probs_batch)
-        class_labels.append(predicted)
+        class_labels.append(labels)
 
     # 10000, 10, and 10000, 1
     # stack concatenates tensors along a new dimension
